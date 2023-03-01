@@ -13,7 +13,7 @@ def v(x, t):
     return np.sin(x + c * t) + np.cos(2 * x + 2 * c * t)
 
 
-[x, y] = np.meshgrid(np.linspace(-5, 5), np.linspace(-5, 5))
+[x, y] = np.meshgrid(np.linspace(-10, 10), np.linspace(-10, 10))
 z = w(x, y)
 fig1 = plt.figure(1)
 ax = fig1.add_subplot(111, projection='3d')
