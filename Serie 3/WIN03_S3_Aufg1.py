@@ -3,8 +3,6 @@ import numpy as np
 
 x1, x2 = sp.symbols('x1, x2')  # Definitions of the symbols
 
-# Teilaufgabe a
-
 f1 = 20 - 18 * x1 - 2 * x2 ** 2
 f2 = -4 * x2 * (x1 - x2 ** 2)
 x0 = np.array([
@@ -13,15 +11,19 @@ x0 = np.array([
 
 
 def newton(func1, func2, x_0):
-    funcMatrix = sp.Matrix([func1, func2])  # Matrix with the two functions
-    funcMatrix0 = funcMatrix.subs([(x1, x_0[0].item()), [x2, x0[1].item()]])
-    Xa = sp.Matrix([x1, x2])  # Matrix with the two symbols
-    Dfunca = funcMatrix.jacobian(Xa)  # Jacobian matrix of fa
-    Dfunca0 = Dfunca.subs([(x1, x_0[0].item()), [x2, x_0[1].item()]])  # Dfa.subs([(x1, 1.1), [x2, 0.9]]) means: substitute x1 with 1.1 and x2 with 0.9
-    AMatrix = np.array(Dfunca0).astype(np.float64)  # Convert Dfa0 to a numpy array
-    funcX0 = -1 * np.array(funcMatrix0).astype(np.float64)  # Convert fa0 to a numpy array
-    sig0 = np.linalg.solve(AMatrix, funcX0)  # Solve the linear system of equations
-    return x_0 + sig0
+    # Define the functions and their Jacobian matrix
+    f = sp.Matrix([func1, func2])
+    J = f.jacobian([x1, x2])
+
+    # Evaluate the functions and their Jacobian matrix at x_0
+    f_x0 = f.subs([(x1, x_0[0].item()), (x2, x_0[1].item())])
+    J_x0 = J.subs([(x1, x_0[0].item()), (x2, x_0[1].item())])
+
+    # Solve the linear system of equations
+    delta = np.linalg.solve(np.array(J_x0).astype(np.float64), -np.array(f_x0).astype(np.float64))
+
+    # Return the updated value of x
+    return x_0 + delta
 
 
 for i in range(10):  # 10 iterations of Newton's method
